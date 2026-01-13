@@ -11,10 +11,13 @@
 ## How It Works
 
 1. Open any note in Obsidian
-2. Run a Mutare command (e.g., "Edit note")
-3. Describe what you want: *"Fix typos"*, *"Convert to bullet points"*, *"Add a summary"*
-4. Review the proposed changes in a preview modal
-5. Click **Apply** to make the edits
+2. Press `Cmd+P` (Mac) or `Ctrl+P` (Windows/Linux) to open the command palette
+3. Type "Mutare" to see available commands
+4. Describe what you want: *"Fix typos"*, *"Convert to bullet points"*, *"Add a summary"*
+5. Review the proposed changes in a preview modal
+6. Click **Apply** to make the edits
+
+> **Tip:** For even faster access, set up hotkeys in Settings → Hotkeys → search "Mutare"
 
 Under the hood, Mutare:
 - Sends your note content with line numbers to an LLM

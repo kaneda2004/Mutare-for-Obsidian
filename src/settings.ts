@@ -14,7 +14,7 @@ export class MutareSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl('h2', { text: 'Mutare Settings' });
+    new Setting(containerEl).setName('Mutare settings').setHeading();
 
     // Provider Selection
     new Setting(containerEl)
@@ -35,7 +35,7 @@ export class MutareSettingTab extends PluginSettingTab {
       });
 
     // API Keys Section
-    containerEl.createEl('h3', { text: 'API Keys' });
+    new Setting(containerEl).setName('API keys').setHeading();
 
     const providers: ProviderType[] = ['anthropic', 'openai', 'gemini'];
 
@@ -52,12 +52,12 @@ export class MutareSettingTab extends PluginSettingTab {
               await this.plugin.saveSettings();
             });
           text.inputEl.type = 'password';
-          text.inputEl.style.width = '300px';
+          text.inputEl.addClass('mutare-input-medium');
         });
     }
 
     // Model Selection Section
-    containerEl.createEl('h3', { text: 'Model Selection' });
+    new Setting(containerEl).setName('Model selection').setHeading();
 
     for (const provider of providers) {
       new Setting(containerEl)
@@ -77,7 +77,7 @@ export class MutareSettingTab extends PluginSettingTab {
     }
 
     // Behavior Section
-    containerEl.createEl('h3', { text: 'Behavior' });
+    new Setting(containerEl).setName('Behavior').setHeading();
 
     new Setting(containerEl)
       .setName('Confirm before applying')
@@ -104,7 +104,7 @@ export class MutareSettingTab extends PluginSettingTab {
       });
 
     // Custom Prompt Section
-    containerEl.createEl('h3', { text: 'Custom Instructions' });
+    new Setting(containerEl).setName('Custom instructions').setHeading();
 
     new Setting(containerEl)
       .setName('Additional system prompt')
@@ -118,15 +118,14 @@ export class MutareSettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           });
         text.inputEl.rows = 4;
-        text.inputEl.style.width = '100%';
+        text.inputEl.addClass('mutare-input-full');
       });
 
     // Saved Prompts Section
-    containerEl.createEl('h3', { text: 'Quick Prompts' });
-    containerEl.createEl('p', {
-      text: 'Manage your quick prompts for common editing tasks.',
-      cls: 'setting-item-description'
-    });
+    new Setting(containerEl)
+      .setName('Quick prompts')
+      .setDesc('Manage your quick prompts for common editing tasks.')
+      .setHeading();
 
     // Render existing prompts
     const promptsContainer = containerEl.createDiv({ cls: 'mutare-prompts-container' });
@@ -183,7 +182,7 @@ export class MutareSettingTab extends PluginSettingTab {
             this.plugin.settings.savedPrompts[index].name = value;
             await this.plugin.saveSettings();
           });
-        text.inputEl.style.width = '200px';
+        text.inputEl.addClass('mutare-input-medium');
       });
 
     // Prompt input
@@ -198,7 +197,7 @@ export class MutareSettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           });
         text.inputEl.rows = 2;
-        text.inputEl.style.width = '100%';
+        text.inputEl.addClass('mutare-input-full');
       });
 
     // Delete button

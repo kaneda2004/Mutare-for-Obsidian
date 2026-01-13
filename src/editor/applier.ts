@@ -99,7 +99,7 @@ export function applyEdits(editor: Editor, edits: EditInstruction[]): ApplyResul
         }
 
         default:
-          errors.push(`Unknown action: ${(edit as EditInstruction).action}`);
+          errors.push(`Unknown action: ${edit.action}`);
       }
     } catch (error) {
       errors.push(`Error applying edit at line ${edit.line}: ${error}`);

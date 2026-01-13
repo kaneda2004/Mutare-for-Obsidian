@@ -509,3 +509,12 @@
 .mutare-prompt-item .setting-item:last-child {
   padding-bottom: 0;
 }
+
+/* Settings input widths */
+.mutare-input-medium {
+  width: 300px;
+}
+
+.mutare-input-full {
+  width: 100%;
+}

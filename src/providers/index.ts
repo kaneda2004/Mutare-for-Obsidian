@@ -15,7 +15,9 @@ export function createProvider(config: ProviderConfig): LLMProvider {
       return new OpenAIProvider(config);
     case 'gemini':
       return new GeminiProvider(config);
-    default:
-      throw new Error(`Unknown provider type: ${config.type}`);
+    default: {
+      const exhaustiveCheck: never = config.type;
+      throw new Error(`Unknown provider type: ${exhaustiveCheck as string}`);
+    }
   }
 }

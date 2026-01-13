@@ -135,5 +135,7 @@ export async function withRetry<T>(
     }
   }
 
-  throw lastError;
+  // This line should never be reached due to the loop logic,
+  // but TypeScript needs a throw statement here
+  throw lastError ?? new ProviderError('Unexpected retry failure', 'unknown', false);
 }

@@ -1,4 +1,4 @@
-import { App, Modal, Setting, ButtonComponent } from 'obsidian';
+import { App, Modal, ButtonComponent } from 'obsidian';
 import { EditHistoryEntry } from '../types';
 
 export interface HistoryModalResult {
@@ -132,9 +132,6 @@ export class HistoryModal extends Modal {
   private renderDiffLines(container: HTMLElement, before: string, after: string, side: 'before' | 'after') {
     const beforeLines = before.split('\n');
     const afterLines = after.split('\n');
-
-    // Simple line-by-line diff
-    const maxLines = Math.max(beforeLines.length, afterLines.length);
     const lines = side === 'before' ? beforeLines : afterLines;
     const otherLines = side === 'before' ? afterLines : beforeLines;
 

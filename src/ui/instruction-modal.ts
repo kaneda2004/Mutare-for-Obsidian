@@ -66,7 +66,7 @@ export class InstructionModal extends Modal {
         this.instruction = value;
       });
     textArea.inputEl.rows = 4;
-    textArea.inputEl.style.width = '100%';
+    textArea.inputEl.addClass('mutare-input-full');
     textArea.inputEl.focus();
 
     // Handle Enter key (Ctrl/Cmd + Enter to submit)

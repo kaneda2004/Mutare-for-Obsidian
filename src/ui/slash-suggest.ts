@@ -84,6 +84,6 @@ export class MutareSlashSuggest extends EditorSuggest<SlashCommand> {
     editor.replaceRange('', start, end);
 
     // Execute the command
-    this.plugin.executeSlashCommand(command.action, command.prompt);
+    void this.plugin.executeSlashCommand(command.action, command.prompt);
   }
 }

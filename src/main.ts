@@ -76,9 +76,9 @@ export default class MutarePlugin extends Plugin {
     this.addCommand({
       id: 'quick-prompts',
       name: 'Quick prompts',
-      editorCallback: async (editor: Editor, view: MarkdownView) => {
-        new QuickPromptModal(this.app, this.settings.savedPrompts, async (prompt) => {
-          await this.executeAIEdit(editor, view, prompt.prompt);
+      editorCallback: (editor: Editor, view: MarkdownView) => {
+        new QuickPromptModal(this.app, this.settings.savedPrompts, (prompt) => {
+          void this.executeAIEdit(editor, view, prompt.prompt);
         }).open();
       },
     });
@@ -89,7 +89,7 @@ export default class MutarePlugin extends Plugin {
       name: 'Generate template',
       editorCallback: async (editor: Editor, view: MarkdownView) => {
         const modal = new InstructionModal(this.app);
-        modal.setTitle('Generate Template');
+        modal.setTitle('Generate template');
         modal.setDescription('Describe the type of template you want to create:');
         modal.setPlaceholder('e.g., "Meeting notes", "Project planning", "Book review", "Daily journal"...');
         modal.setButtonText('Generate');
@@ -165,8 +165,8 @@ export default class MutarePlugin extends Plugin {
             .setTitle('Mutare: Quick prompts')
             .setIcon('zap')
             .onClick(() => {
-              new QuickPromptModal(this.app, this.settings.savedPrompts, async (prompt) => {
-                await this.executeAIEdit(editor, view, prompt.prompt);
+              new QuickPromptModal(this.app, this.settings.savedPrompts, (prompt) => {
+                void this.executeAIEdit(editor, view, prompt.prompt);
               }).open();
             });
         });
@@ -232,8 +232,8 @@ export default class MutarePlugin extends Plugin {
           .onClick(() => {
             const view = this.app.workspace.getActiveViewOfType(MarkdownView);
             if (view) {
-              new QuickPromptModal(this.app, this.settings.savedPrompts, async (prompt) => {
-                await this.executeAIEdit(view.editor, view, prompt.prompt);
+              new QuickPromptModal(this.app, this.settings.savedPrompts, (prompt) => {
+                void this.executeAIEdit(view.editor, view, prompt.prompt);
               }).open();
             } else {
               new Notice('Please open a note first');
@@ -302,7 +302,7 @@ export default class MutarePlugin extends Plugin {
       });
 
       menu.addItem((item) => {
-        item.setTitle('Auto Improve').setIcon('sparkles').onClick(async () => {
+        item.setTitle('Auto improve').setIcon('sparkles').onClick(async () => {
           const view = this.app.workspace.getActiveViewOfType(MarkdownView);
           if (view) {
             const autoImprove = this.settings.savedPrompts.find(p => p.id === 'auto-improve');
@@ -313,11 +313,11 @@ export default class MutarePlugin extends Plugin {
       });
 
       menu.addItem((item) => {
-        item.setTitle('Generate Template').setIcon('layout-template').onClick(async () => {
+        item.setTitle('Generate template').setIcon('layout-template').onClick(async () => {
           const view = this.app.workspace.getActiveViewOfType(MarkdownView);
           if (view) {
             const modal = new InstructionModal(this.app);
-            modal.setTitle('Generate Template');
+            modal.setTitle('Generate template');
             modal.setDescription('Describe the type of template you want to create:');
             modal.setPlaceholder('e.g., "Meeting notes", "Project planning", "Book review", "Daily journal"...');
             modal.setButtonText('Generate');
@@ -336,8 +336,8 @@ export default class MutarePlugin extends Plugin {
         item.setTitle('More prompts...').setIcon('zap').onClick(() => {
           const view = this.app.workspace.getActiveViewOfType(MarkdownView);
           if (view) {
-            new QuickPromptModal(this.app, this.settings.savedPrompts, async (prompt) => {
-              await this.executeAIEdit(view.editor, view, prompt.prompt);
+            new QuickPromptModal(this.app, this.settings.savedPrompts, (prompt) => {
+              void this.executeAIEdit(view.editor, view, prompt.prompt);
             }).open();
           }
         });

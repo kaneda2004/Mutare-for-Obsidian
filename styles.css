@@ -6,7 +6,32 @@
 }
 
 .mutare-preview-modal h2 {
+  margin: 0;
+}
+
+/* Header with top action bar */
+.mutare-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.mutare-top-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mutare-shortcut-hint {
+  font-size: 0.8em;
+  color: var(--text-faint);
+  background: var(--background-secondary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-monospace);
 }
 
 .mutare-reasoning {
@@ -297,7 +322,17 @@
    ======================================== */
 
 .mutare-slash-suggestion {
-  padding: 4px 8px;
+  padding: 8px 12px;
+}
+
+.mutare-slash-title {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.mutare-slash-desc {
+  font-size: 0.85em;
+  color: var(--text-muted);
 }
 
 /* ========================================
@@ -315,4 +350,29 @@
 .mutare-quick-prompt-desc {
   font-size: 0.85em;
   color: var(--text-muted);
+}
+
+/* ========================================
+   Settings - Prompts Management
+   ======================================== */
+
+.mutare-prompts-container {
+  margin-bottom: 1rem;
+}
+
+.mutare-prompt-item {
+  background: var(--background-secondary);
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--background-modifier-border);
+}
+
+.mutare-prompt-item .setting-item {
+  border: none;
+  padding: 0.25rem 0;
+}
+
+.mutare-prompt-item .setting-item:last-child {
+  padding-bottom: 0;
 }

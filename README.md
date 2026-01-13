@@ -8,41 +8,52 @@
   <img src="assets/logo-256.png" alt="Mutare Logo" width="128" />
 </p>
 
+## Features
+
+- **Multiple access points** — Use whichever fits your workflow:
+  - 🎨 **Ribbon icon** — Click the wand in the left sidebar
+  - ⌨️ **Command palette** — `Cmd+P` → "Mutare"
+  - 📝 **Slash commands** — Type `/mutare` in any note
+  - 🖱️ **Context menu** — Right-click in the editor
+  - 📊 **Status bar** — Click "Mutare" in the bottom-right
+
+- **Smart editing commands**:
+  - `Edit note` — Opens a prompt for custom instructions
+  - `Edit with selection` — Uses selected text as the instruction
+  - `Auto-improve` — Automatically fixes typos, grammar, and clarity
+  - `Quick prompts` — Fuzzy-searchable preset prompts
+
+- **Multi-provider support**:
+  - Anthropic Claude (claude-sonnet-4-5, claude-haiku-4-5, claude-opus-4-5)
+  - OpenAI (gpt-5.2, gpt-5.1, gpt-5.1-mini, gpt-4.1, gpt-4.1-mini)
+  - Google Gemini (gemini-3-pro, gemini-3-flash, gemini-2.5-pro, gemini-2.5-flash)
+
+- **Preview before applying** — See exactly what will change, with `Cmd+Enter` to quickly accept
+
+- **AI reasoning** — Understand *why* the AI made each change
+
+- **Edit history** — View past edits and revert if needed
+
+- **Custom prompts** — Create, edit, and manage your own quick prompts
+
+- **Reliable** — Automatic retry with exponential backoff for network issues
+
 ## How It Works
 
 1. Open any note in Obsidian
-2. Press `Cmd+P` (Mac) or `Ctrl+P` (Windows/Linux) to open the command palette
-3. Type "Mutare" to see available commands
-4. Describe what you want: *"Fix typos"*, *"Convert to bullet points"*, *"Add a summary"*
-5. Review the proposed changes in a preview modal
-6. Click **Apply** to make the edits
-
-> **Tip:** For even faster access, set up hotkeys in Settings → Hotkeys → search "Mutare"
+2. Access Mutare via any method (ribbon, command palette, `/mutare`, context menu, or status bar)
+3. Describe what you want: *"Fix typos"*, *"Convert to bullet points"*, *"Add a summary"*
+4. Review the proposed changes in a preview modal
+5. Press `Cmd+Enter` or click **Apply Edits** to make the changes
 
 Under the hood, Mutare:
 - Sends your note content with line numbers to an LLM
 - Receives structured edit instructions (which lines to replace, insert, or delete)
 - Applies edits precisely using Obsidian's Editor API
 
-## Features
-
-- **Three commands** for different workflows:
-  - `Mutare: Edit note` — Opens a prompt for custom instructions
-  - `Mutare: Edit with selection` — Uses selected text as the instruction
-  - `Mutare: Auto-improve` — Automatically fixes typos, grammar, and clarity
-
-- **Multi-provider support**:
-  - Anthropic Claude (claude-sonnet-4-5, claude-haiku-4-5, claude-opus-4-5)
-  - OpenAI (gpt-5.2, gpt-5.1, gpt-4.1, gpt-4.1-mini)
-  - Google Gemini (gemini-3-pro, gemini-3-flash, gemini-2.5-pro, gemini-2.5-flash)
-
-- **Preview before applying** — See exactly what will change before committing
-
-- **AI reasoning** — Understand *why* the AI made each change
-
 ## Installation
 
-### From Obsidian Community Plugins (Coming Soon)
+### From Obsidian Community Plugins
 
 1. Open Settings → Community plugins
 2. Search for "Mutare"
@@ -67,6 +78,7 @@ Go to **Settings → Mutare** to configure:
 | **Confirm before applying** | Show preview modal (recommended) |
 | **Show AI reasoning** | Display the AI's explanation for changes |
 | **Custom system prompt** | Add your own instructions to the AI |
+| **Quick Prompts** | Add, edit, or delete custom prompts |
 
 ## Usage Examples
 
@@ -80,10 +92,21 @@ Go to **Settings → Mutare** to configure:
 > "Add a TL;DR summary at the top"
 
 ### Task Management
-> "Mark all completed items with [x] and add timestamps"
+> "Mark all completed items with [x] and move them to the bottom"
 
 ### Formatting
 > "Format this as a table with columns for Name, Date, and Status"
+
+## Quick Access Methods
+
+| Method | How to Use |
+|--------|------------|
+| **Ribbon** | Click the wand icon (🪄) in the left sidebar |
+| **Command Palette** | `Cmd+P` / `Ctrl+P` → type "Mutare" |
+| **Slash Command** | Type `/mutare` in any note, then select an action |
+| **Context Menu** | Right-click in the editor → Mutare options |
+| **Status Bar** | Click "Mutare" in the bottom-right corner |
+| **Hotkeys** | Settings → Hotkeys → search "Mutare" to assign custom shortcuts |
 
 ## How Edits Work
 
@@ -96,14 +119,14 @@ Note with line numbers:        LLM returns:
    2 | - [ ] Task one              "content": "- [x] Task one"},
    3 | - [x] Task two            {"line": 4, "action": "insert",
    4 |                              "content": "## Completed"}
-                                ]}
+                               ]}
 ```
 
 Edits are applied **bottom-up** (highest line number first) to preserve line number accuracy.
 
 ## Requirements
 
-- Obsidian v1.0.0 or higher
+- Obsidian v1.4.0 or higher
 - An API key from at least one supported provider:
   - [Anthropic Console](https://console.anthropic.com/)
   - [OpenAI Platform](https://platform.openai.com/)
@@ -121,7 +144,7 @@ Edits are applied **bottom-up** (highest line number first) to preserve line num
 ```bash
 # Clone the repo
 git clone https://github.com/kaneda2004/Mutare-for-Obsidian.git
-cd mutare
+cd Mutare-for-Obsidian
 
 # Install dependencies
 npm install
@@ -142,7 +165,7 @@ mutare/
 │   ├── types.ts             # TypeScript types & Zod schemas
 │   ├── settings.ts          # Settings tab
 │   ├── providers/           # LLM provider implementations
-│   │   ├── base.ts          # Abstract provider class
+│   │   ├── base.ts          # Abstract provider class + retry logic
 │   │   ├── anthropic.ts     # Anthropic Claude
 │   │   ├── openai.ts        # OpenAI GPT
 │   │   └── gemini.ts        # Google Gemini
@@ -151,6 +174,11 @@ mutare/
 │   │   └── applier.ts       # Edit application logic
 │   ├── prompts/             # System prompts
 │   └── ui/                  # Modal components
+│       ├── preview-modal.ts # Edit preview with diff
+│       ├── instruction-modal.ts
+│       ├── quick-prompt-modal.ts
+│       ├── history-modal.ts # Edit history viewer
+│       └── slash-suggest.ts # /mutare slash commands
 ├── manifest.json            # Obsidian plugin manifest
 ├── styles.css               # Plugin styles
 └── esbuild.config.mjs       # Build configuration
@@ -174,7 +202,7 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 - Built with the [Obsidian Plugin API](https://docs.obsidian.md/)
 - Uses [Zod](https://zod.dev/) for schema validation
-- Inspired by AI coding assistants like Cursor and Claude Code
+- Inspired by modern AI coding assistants
 
 ---
 

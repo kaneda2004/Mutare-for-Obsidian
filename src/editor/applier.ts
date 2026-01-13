@@ -2,6 +2,18 @@ import { Editor } from 'obsidian';
 import { EditInstruction, ApplyResult, EditorPosition } from '../types';
 
 /**
+ * Simple content hash for change detection.
+ * Uses djb2 algorithm - fast and sufficient for change detection.
+ */
+export function hashContent(content: string): number {
+  let hash = 5381;
+  for (let i = 0; i < content.length; i++) {
+    hash = ((hash << 5) + hash) + content.charCodeAt(i);
+  }
+  return hash >>> 0; // Convert to unsigned 32-bit
+}
+
+/**
  * Apply edit instructions to the Obsidian editor
  *
  * CRITICAL: Edits are applied in reverse order (bottom-up) to preserve

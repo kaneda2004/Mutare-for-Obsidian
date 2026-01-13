@@ -1,11 +1,11 @@
-import { Editor, MarkdownView, Menu, Notice, Plugin, setIcon } from 'obsidian';
+import { Editor, MarkdownView, Menu, Notice, Plugin, setIcon, TFile } from 'obsidian';
 import { MutareSettings, DEFAULT_SETTINGS, ProviderConfig, EditHistoryEntry, SavedPrompt } from './types';
 import { MutareSettingTab } from './settings';
 import { createProvider, LLMRequestContext } from './providers';
 import { formatNoteWithLineNumbers } from './editor/formatter';
-import { applyEdits, previewEdits } from './editor/applier';
+import { applyEdits, previewEdits, hashContent } from './editor/applier';
 import { buildSystemPrompt } from './prompts/system';
-import { EditPreviewModal, InstructionModal, QuickPromptModal, HistoryModal } from './ui';
+import { EditPreviewModal, InstructionModal, QuickPromptModal, HistoryModal, MutareSlashSuggest } from './ui';
 
 export default class MutarePlugin extends Plugin {
   settings: MutareSettings;
@@ -343,12 +343,44 @@ export default class MutarePlugin extends Plugin {
   }
 
   // ========================================
-  // Slash Commands (placeholder - full implementation requires EditorSuggest subclass)
+  // Slash Commands
   // ========================================
   private registerSlashCommands() {
-    // Slash commands would require a proper EditorSuggest subclass implementation
-    // For now, users can use the command palette (Cmd+P) or quick prompts
-    // This is a placeholder for future enhancement
+    this.registerEditorSuggest(new MutareSlashSuggest(this));
+  }
+
+  /**
+   * Execute slash command (called from MutareSlashSuggest)
+   */
+  async executeSlashCommand(action: 'prompt' | 'quick-prompt' | 'auto-improve', prompt?: SavedPrompt) {
+    const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+    if (!view) {
+      new Notice('Please open a note first');
+      return;
+    }
+
+    switch (action) {
+      case 'prompt': {
+        const modal = new InstructionModal(this.app);
+        const result = await modal.waitForResult();
+        if (result.instruction) {
+          await this.executeAIEdit(view.editor, view, result.instruction);
+        }
+        break;
+      }
+      case 'auto-improve': {
+        const instruction =
+          'Review this note and make appropriate improvements: fix typos, improve grammar, enhance clarity, and complete any obvious missing information. Be conservative - only make changes that clearly improve the note.';
+        await this.executeAIEdit(view.editor, view, instruction);
+        break;
+      }
+      case 'quick-prompt': {
+        if (prompt) {
+          await this.executeAIEdit(view.editor, view, prompt.prompt);
+        }
+        break;
+      }
+    }
   }
 
   // ========================================
@@ -361,8 +393,13 @@ export default class MutarePlugin extends Plugin {
       return;
     }
 
+    if (!(file instanceof TFile)) {
+      new Notice(`Cannot revert: ${entry.notePath} is not a file`);
+      return;
+    }
+
     try {
-      await this.app.vault.modify(file as any, entry.beforeContent);
+      await this.app.vault.modify(file, entry.beforeContent);
       new Notice('Reverted to previous version');
     } catch (error) {
       new Notice(`Failed to revert: ${error}`);
@@ -393,6 +430,7 @@ export default class MutarePlugin extends Plugin {
 
       // Prepare context
       const noteContent = editor.getValue();
+      const contentHashBefore = hashContent(noteContent);
       const formattedContent = formatNoteWithLineNumbers(noteContent);
       const systemPrompt = buildSystemPrompt(this.settings.customSystemPrompt);
 
@@ -404,6 +442,13 @@ export default class MutarePlugin extends Plugin {
 
       // Call LLM
       const response = await provider.generateEdits(context);
+
+      // Check if content changed during API call
+      if (hashContent(editor.getValue()) !== contentHashBefore) {
+        new Notice('Note was modified during AI processing. Edit cancelled to prevent data loss. Please try again.');
+        this.updateStatusBar('error', 'Content changed');
+        return;
+      }
 
       // Validate response has edits
       if (!response.edits || response.edits.length === 0) {

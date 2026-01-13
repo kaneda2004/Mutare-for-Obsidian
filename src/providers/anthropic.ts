@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { LLMProvider, LLMRequestContext } from './base';
+import { LLMProvider, LLMRequestContext, withRetry } from './base';
 import { LLMResponse, LLMResponseSchema, ProviderConfig } from '../types';
 
 const JSON_INSTRUCTION = `\n\nIMPORTANT: You must respond with ONLY valid JSON. No markdown, no code blocks, no explanation outside the JSON. Your entire response must be parseable JSON matching this exact schema:
@@ -26,33 +26,42 @@ export class AnthropicProvider extends LLMProvider {
   }
 
   async generateEdits(context: LLMRequestContext): Promise<LLMResponse> {
-    const response = await this.client.messages.create({
-      model: this.config.model,
-      max_tokens: 4096,
-      system: context.systemPrompt + JSON_INSTRUCTION,
-      messages: [
-        {
-          role: 'user',
-          content: `${context.userInstruction}\n\n---\n\nNote content:\n${context.noteContent}`,
-        },
-      ],
-    });
+    return withRetry(async () => {
+      const response = await this.client.messages.create({
+        model: this.config.model,
+        max_tokens: 4096,
+        system: context.systemPrompt + JSON_INSTRUCTION,
+        messages: [
+          {
+            role: 'user',
+            content: `${context.userInstruction}\n\n---\n\nNote content:\n${context.noteContent}`,
+          },
+        ],
+      });
 
-    // Extract text content from response
-    const textBlock = response.content.find(block => block.type === 'text');
-    if (!textBlock || textBlock.type !== 'text') {
-      throw new Error('No text response from Anthropic');
-    }
+      // Extract text content from response
+      const textBlock = response.content.find(block => block.type === 'text');
+      if (!textBlock || textBlock.type !== 'text') {
+        throw new Error('No text response from Anthropic');
+      }
 
-    // Parse and validate with Zod
-    const text = textBlock.text.trim();
-    // Handle potential markdown code blocks
-    const jsonText = text.startsWith('```')
-      ? text.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
-      : text;
+      // Parse and validate with Zod
+      const text = textBlock.text.trim();
+      // Handle potential markdown code blocks
+      const jsonText = text.startsWith('```')
+        ? text.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
+        : text;
 
-    const parsed = JSON.parse(jsonText);
-    return LLMResponseSchema.parse(parsed);
+      let parsed;
+      try {
+        parsed = JSON.parse(jsonText);
+      } catch (error) {
+        throw new Error(
+          `Failed to parse Anthropic response as JSON: ${error instanceof Error ? error.message : 'Invalid JSON'}`
+        );
+      }
+      return LLMResponseSchema.parse(parsed);
+    }, this.name);
   }
 
   async validateApiKey(): Promise<boolean> {

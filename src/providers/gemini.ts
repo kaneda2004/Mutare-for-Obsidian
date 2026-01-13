@@ -1,6 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 import { zodToJsonSchema } from 'zod-to-json-schema';
-import { LLMProvider, LLMRequestContext } from './base';
+import { LLMProvider, LLMRequestContext, withRetry } from './base';
 import { LLMResponse, LLMResponseSchema, ProviderConfig } from '../types';
 
 export class GeminiProvider extends LLMProvider {
@@ -16,25 +16,34 @@ export class GeminiProvider extends LLMProvider {
   }
 
   async generateEdits(context: LLMRequestContext): Promise<LLMResponse> {
-    const schema = zodToJsonSchema(LLMResponseSchema);
+    return withRetry(async () => {
+      const schema = zodToJsonSchema(LLMResponseSchema);
 
-    const response = await this.client.models.generateContent({
-      model: this.config.model,
-      contents: `${context.systemPrompt}\n\n---\n\nUser instruction: ${context.userInstruction}\n\n---\n\nNote content:\n${context.noteContent}`,
-      config: {
-        responseMimeType: 'application/json',
-        responseSchema: schema as object,
-      },
-    });
+      const response = await this.client.models.generateContent({
+        model: this.config.model,
+        contents: `${context.systemPrompt}\n\n---\n\nUser instruction: ${context.userInstruction}\n\n---\n\nNote content:\n${context.noteContent}`,
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: schema as object,
+        },
+      });
 
-    const text = response.text;
-    if (!text) {
-      throw new Error('No response from Gemini');
-    }
+      const text = response.text;
+      if (!text) {
+        throw new Error('No response from Gemini');
+      }
 
-    // Parse and validate with Zod
-    const parsed = JSON.parse(text);
-    return LLMResponseSchema.parse(parsed);
+      // Parse and validate with Zod
+      let parsed;
+      try {
+        parsed = JSON.parse(text);
+      } catch (error) {
+        throw new Error(
+          `Failed to parse Gemini response as JSON: ${error instanceof Error ? error.message : 'Invalid JSON'}`
+        );
+      }
+      return LLMResponseSchema.parse(parsed);
+    }, this.name);
   }
 
   async validateApiKey(): Promise<boolean> {

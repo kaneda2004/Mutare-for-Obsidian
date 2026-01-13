@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 import { zodToJsonSchema } from 'zod-to-json-schema';
-import { LLMProvider, LLMRequestContext } from './base';
+import { LLMProvider, LLMRequestContext, withRetry } from './base';
 import { LLMResponse, LLMResponseSchema, ProviderConfig } from '../types';
 
 export class OpenAIProvider extends LLMProvider {
@@ -19,36 +19,45 @@ export class OpenAIProvider extends LLMProvider {
   }
 
   async generateEdits(context: LLMRequestContext): Promise<LLMResponse> {
-    const schema = zodToJsonSchema(LLMResponseSchema);
+    return withRetry(async () => {
+      const schema = zodToJsonSchema(LLMResponseSchema);
 
-    const response = await this.client.chat.completions.create({
-      model: this.config.model,
-      max_tokens: 4096,
-      messages: [
-        { role: 'system', content: context.systemPrompt },
-        {
-          role: 'user',
-          content: `${context.userInstruction}\n\n---\n\nNote content:\n${context.noteContent}`,
+      const response = await this.client.chat.completions.create({
+        model: this.config.model,
+        max_tokens: 4096,
+        messages: [
+          { role: 'system', content: context.systemPrompt },
+          {
+            role: 'user',
+            content: `${context.userInstruction}\n\n---\n\nNote content:\n${context.noteContent}`,
+          },
+        ],
+        response_format: {
+          type: 'json_schema',
+          json_schema: {
+            name: 'edit_response',
+            strict: true,
+            schema: schema as Record<string, unknown>,
+          },
         },
-      ],
-      response_format: {
-        type: 'json_schema',
-        json_schema: {
-          name: 'edit_response',
-          strict: true,
-          schema: schema as Record<string, unknown>,
-        },
-      },
-    });
+      });
 
-    const content = response.choices[0]?.message?.content;
-    if (!content) {
-      throw new Error('No response from OpenAI');
-    }
+      const content = response.choices[0]?.message?.content;
+      if (!content) {
+        throw new Error('No response from OpenAI');
+      }
 
-    // Parse and validate with Zod
-    const parsed = JSON.parse(content);
-    return LLMResponseSchema.parse(parsed);
+      // Parse and validate with Zod
+      let parsed;
+      try {
+        parsed = JSON.parse(content);
+      } catch (error) {
+        throw new Error(
+          `Failed to parse OpenAI response as JSON: ${error instanceof Error ? error.message : 'Invalid JSON'}`
+        );
+      }
+      return LLMResponseSchema.parse(parsed);
+    }, this.name);
   }
 
   async validateApiKey(): Promise<boolean> {

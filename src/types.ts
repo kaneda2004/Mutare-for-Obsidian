@@ -135,3 +135,21 @@ export interface ApplyResult {
   appliedCount: number;
   errors: string[];
 }
+
+// ============================================
+// Provider Errors
+// ============================================
+
+export type ProviderErrorType = 'auth' | 'rate_limit' | 'network' | 'server' | 'parse' | 'unknown';
+
+export class ProviderError extends Error {
+  constructor(
+    message: string,
+    public readonly type: ProviderErrorType,
+    public readonly retryable: boolean,
+    public readonly originalError?: Error
+  ) {
+    super(message);
+    this.name = 'ProviderError';
+  }
+}

@@ -1,6 +1,6 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import MutarePlugin from './main';
-import { ProviderType, PROVIDER_MODELS, PROVIDER_NAMES } from './types';
+import { ProviderType, PROVIDER_MODELS, PROVIDER_NAMES, SavedPrompt, DEFAULT_PROMPTS } from './types';
 
 export class MutareSettingTab extends PluginSettingTab {
   plugin: MutarePlugin;
@@ -119,6 +119,99 @@ export class MutareSettingTab extends PluginSettingTab {
           });
         text.inputEl.rows = 4;
         text.inputEl.style.width = '100%';
+      });
+
+    // Saved Prompts Section
+    containerEl.createEl('h3', { text: 'Quick Prompts' });
+    containerEl.createEl('p', {
+      text: 'Manage your quick prompts for common editing tasks.',
+      cls: 'setting-item-description'
+    });
+
+    // Render existing prompts
+    const promptsContainer = containerEl.createDiv({ cls: 'mutare-prompts-container' });
+    for (let i = 0; i < this.plugin.settings.savedPrompts.length; i++) {
+      const prompt = this.plugin.settings.savedPrompts[i];
+      this.renderPromptItem(promptsContainer, prompt, i);
+    }
+
+    // Add new prompt button
+    new Setting(containerEl)
+      .addButton(button => {
+        button
+          .setButtonText('Add New Prompt')
+          .setCta()
+          .onClick(async () => {
+            const newPrompt: SavedPrompt = {
+              id: `custom-${Date.now()}`,
+              name: 'New Prompt',
+              prompt: '',
+            };
+            this.plugin.settings.savedPrompts.push(newPrompt);
+            await this.plugin.saveSettings();
+            this.display(); // Refresh
+          });
+      });
+
+    // Reset to defaults
+    new Setting(containerEl)
+      .setName('Reset prompts')
+      .setDesc('Restore the default prompts (custom prompts will be lost)')
+      .addButton(button => {
+        button
+          .setButtonText('Reset to Defaults')
+          .setWarning()
+          .onClick(async () => {
+            this.plugin.settings.savedPrompts = [...DEFAULT_PROMPTS];
+            await this.plugin.saveSettings();
+            this.display();
+          });
+      });
+  }
+
+  private renderPromptItem(container: HTMLElement, prompt: SavedPrompt, index: number) {
+    const itemEl = container.createDiv({ cls: 'mutare-prompt-item' });
+
+    // Name input
+    new Setting(itemEl)
+      .setName('Name')
+      .addText(text => {
+        text
+          .setValue(prompt.name)
+          .setPlaceholder('Prompt name')
+          .onChange(async (value) => {
+            this.plugin.settings.savedPrompts[index].name = value;
+            await this.plugin.saveSettings();
+          });
+        text.inputEl.style.width = '200px';
+      });
+
+    // Prompt input
+    new Setting(itemEl)
+      .setName('Prompt')
+      .addTextArea(text => {
+        text
+          .setValue(prompt.prompt)
+          .setPlaceholder('Enter the instruction...')
+          .onChange(async (value) => {
+            this.plugin.settings.savedPrompts[index].prompt = value;
+            await this.plugin.saveSettings();
+          });
+        text.inputEl.rows = 2;
+        text.inputEl.style.width = '100%';
+      });
+
+    // Delete button
+    new Setting(itemEl)
+      .addButton(button => {
+        button
+          .setButtonText('Delete')
+          .setWarning()
+          .onClick(async () => {
+            this.plugin.settings.savedPrompts.splice(index, 1);
+            await this.plugin.saveSettings();
+            this.display();
+          });
       });
   }
 }

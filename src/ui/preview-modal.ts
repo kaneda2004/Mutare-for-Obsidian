@@ -33,13 +33,46 @@ export class EditPreviewModal extends Modal {
     });
   }
 
+  private confirmAndClose() {
+    if (this.resolvePromise) {
+      this.resolvePromise({ confirmed: true });
+    }
+    this.close();
+  }
+
+  private cancelAndClose() {
+    if (this.resolvePromise) {
+      this.resolvePromise({ confirmed: false });
+    }
+    this.close();
+  }
+
   onOpen() {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('mutare-preview-modal');
 
-    // Title
-    contentEl.createEl('h2', { text: 'Review Proposed Edits' });
+    // Register keyboard shortcut
+    this.scope.register(['Mod'], 'Enter', (evt: KeyboardEvent) => {
+      evt.preventDefault();
+      this.confirmAndClose();
+    });
+
+    // Title with top action bar
+    const headerEl = contentEl.createDiv({ cls: 'mutare-header' });
+    headerEl.createEl('h2', { text: 'Review Proposed Edits' });
+
+    const topButtonContainer = headerEl.createDiv({ cls: 'mutare-top-buttons' });
+    new ButtonComponent(topButtonContainer)
+      .setButtonText('Apply Edits')
+      .setCta()
+      .onClick(() => this.confirmAndClose());
+
+    const shortcutHint = topButtonContainer.createEl('span', {
+      cls: 'mutare-shortcut-hint',
+      text: '⌘↵'
+    });
+    shortcutHint.setAttribute('aria-label', 'Cmd+Enter to apply');
 
     // Reasoning (if provided and enabled)
     if (this.showReasoning && this.response.reasoning) {
@@ -74,27 +107,17 @@ export class EditPreviewModal extends Modal {
     const previewPre = previewContainer.createEl('pre', { cls: 'mutare-preview-content' });
     previewPre.setText(this.previewContent);
 
-    // Buttons
+    // Bottom buttons
     const buttonContainer = contentEl.createDiv({ cls: 'mutare-buttons' });
 
     new ButtonComponent(buttonContainer)
       .setButtonText('Cancel')
-      .onClick(() => {
-        if (this.resolvePromise) {
-          this.resolvePromise({ confirmed: false });
-        }
-        this.close();
-      });
+      .onClick(() => this.cancelAndClose());
 
     new ButtonComponent(buttonContainer)
       .setButtonText('Apply Edits')
       .setCta()
-      .onClick(() => {
-        if (this.resolvePromise) {
-          this.resolvePromise({ confirmed: true });
-        }
-        this.close();
-      });
+      .onClick(() => this.confirmAndClose());
   }
 
   onClose() {

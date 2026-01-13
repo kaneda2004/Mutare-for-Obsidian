@@ -147,3 +147,172 @@
   color: var(--text-faint);
   margin-bottom: 1rem;
 }
+
+/* ========================================
+   Status Bar
+   ======================================== */
+
+.mutare-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 0 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.mutare-status-bar:hover {
+  background: var(--background-modifier-hover);
+}
+
+.mutare-status-icon {
+  display: flex;
+  align-items: center;
+}
+
+.mutare-status-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.mutare-status-text {
+  font-size: 12px;
+}
+
+.mutare-status-bar.mutare-processing {
+  color: var(--text-accent);
+}
+
+.mutare-status-bar.mutare-processing .mutare-status-icon svg {
+  animation: mutare-spin 1s linear infinite;
+}
+
+.mutare-status-bar.mutare-error {
+  color: var(--text-error);
+}
+
+@keyframes mutare-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   History Modal
+   ======================================== */
+
+.mutare-history-modal {
+  max-width: 700px;
+}
+
+.mutare-history-empty {
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 2rem;
+}
+
+.mutare-history-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.mutare-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: var(--background-secondary);
+  border-radius: 8px;
+}
+
+.mutare-history-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.mutare-history-note {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.mutare-history-instruction {
+  font-size: 0.9em;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mutare-history-meta {
+  font-size: 0.8em;
+  color: var(--text-faint);
+}
+
+.mutare-history-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 1rem;
+}
+
+/* ========================================
+   Diff Modal
+   ======================================== */
+
+.mutare-diff-modal {
+  max-width: 900px;
+}
+
+.mutare-diff-container {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.mutare-diff-pane {
+  flex: 1;
+  min-width: 0;
+}
+
+.mutare-diff-pane h4 {
+  margin-bottom: 0.5rem;
+}
+
+.mutare-diff-content {
+  max-height: 300px;
+  overflow: auto;
+  padding: 1rem;
+  background: var(--background-secondary);
+  border-radius: 8px;
+  font-size: 0.85em;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ========================================
+   Slash Command Suggestions
+   ======================================== */
+
+.mutare-slash-suggestion {
+  padding: 4px 8px;
+}
+
+/* ========================================
+   Quick Prompt Modal
+   ======================================== */
+
+.suggestion-item.mutare-quick-prompt {
+  padding: 8px 12px;
+}
+
+.mutare-quick-prompt-name {
+  font-weight: 500;
+}
+
+.mutare-quick-prompt-desc {
+  font-size: 0.85em;
+  color: var(--text-muted);
+}

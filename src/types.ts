@@ -45,6 +45,39 @@ export const PROVIDER_NAMES: Record<ProviderType, string> = {
 };
 
 // ============================================
+// Saved Prompts
+// ============================================
+
+export interface SavedPrompt {
+  id: string;
+  name: string;
+  prompt: string;
+}
+
+export const DEFAULT_PROMPTS: SavedPrompt[] = [
+  { id: 'fix-grammar', name: 'Fix Grammar & Typos', prompt: 'Fix any typos, grammar issues, and spelling mistakes.' },
+  { id: 'improve-clarity', name: 'Improve Clarity', prompt: 'Improve the clarity and readability of this note while preserving the meaning.' },
+  { id: 'make-concise', name: 'Make Concise', prompt: 'Make this note more concise by removing redundancy and unnecessary words.' },
+  { id: 'add-summary', name: 'Add Summary', prompt: 'Add a brief TL;DR summary at the top of this note.' },
+  { id: 'convert-bullets', name: 'Convert to Bullets', prompt: 'Convert this content into a well-organized bulleted list.' },
+  { id: 'format-table', name: 'Format as Table', prompt: 'Convert this content into a markdown table with appropriate columns.' },
+];
+
+// ============================================
+// Edit History
+// ============================================
+
+export interface EditHistoryEntry {
+  id: string;
+  timestamp: number;
+  notePath: string;
+  instruction: string;
+  beforeContent: string;
+  afterContent: string;
+  editsApplied: number;
+}
+
+// ============================================
 // Plugin Settings
 // ============================================
 
@@ -55,6 +88,11 @@ export interface MutareSettings {
   customSystemPrompt: string;
   confirmBeforeApply: boolean;
   showReasoning: boolean;
+  savedPrompts: SavedPrompt[];
+  editHistory: EditHistoryEntry[];
+  maxHistoryEntries: number;
+  showRibbonIcon: boolean;
+  showStatusBar: boolean;
 }
 
 export const DEFAULT_SETTINGS: MutareSettings = {
@@ -72,6 +110,11 @@ export const DEFAULT_SETTINGS: MutareSettings = {
   customSystemPrompt: '',
   confirmBeforeApply: true,
   showReasoning: true,
+  savedPrompts: DEFAULT_PROMPTS,
+  editHistory: [],
+  maxHistoryEntries: 50,
+  showRibbonIcon: true,
+  showStatusBar: true,
 };
 
 // ============================================

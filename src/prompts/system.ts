@@ -30,6 +30,8 @@ Each edit instruction must have:
 5. When deleting multiple consecutive lines, delete from bottom to top to preserve line numbers
 6. Always provide the complete new content for replace/insert operations
 7. If no changes are needed, return an empty edits array
+8. CRITICAL: Check line numbers carefully! A note with only a title has just line 0. To add content below, use insert at line 1.
+9. Never reference line numbers that don't exist - count the lines provided to you
 
 ## Example Response
 {

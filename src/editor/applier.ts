@@ -40,8 +40,13 @@ export function applyEdits(editor: Editor, edits: EditInstruction[]): ApplyResul
       switch (edit.action) {
         case 'replace': {
           if (edit.line >= lineCount) {
-            errors.push(`Line ${edit.line} does not exist (only ${lineCount} lines)`);
-            continue;
+            // Line doesn't exist - append instead of failing
+            const lastLine = lineCount - 1;
+            const lastLineText = editor.getLine(lastLine);
+            const appendPos: EditorPosition = { line: lastLine, ch: lastLineText.length };
+            editor.replaceRange('\n' + edit.content, appendPos);
+            appliedCount++;
+            break;
           }
           const lineText = editor.getLine(edit.line);
           const from: EditorPosition = { line: edit.line, ch: 0 };
@@ -54,8 +59,13 @@ export function applyEdits(editor: Editor, edits: EditInstruction[]): ApplyResul
         case 'insert': {
           // Insert creates a new line BEFORE the specified line number
           if (edit.line > lineCount) {
-            errors.push(`Cannot insert at line ${edit.line} (only ${lineCount} lines)`);
-            continue;
+            // Past end - append instead of failing
+            const lastLine = lineCount - 1;
+            const lastLineText = editor.getLine(lastLine);
+            const appendPos: EditorPosition = { line: lastLine, ch: lastLineText.length };
+            editor.replaceRange('\n' + edit.content, appendPos);
+            appliedCount++;
+            break;
           }
           const insertPos: EditorPosition = { line: edit.line, ch: 0 };
           editor.replaceRange(edit.content + '\n', insertPos);

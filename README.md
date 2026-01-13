@@ -8,6 +8,10 @@
   <img src="assets/logo-256.png" alt="Mutare Logo" width="128" />
 </p>
 
+<p align="center">
+  <img src="demo.gif" alt="Mutare Demo" width="800" />
+</p>
+
 ## Features
 
 - **Multiple access points** — Use whichever fits your workflow:
@@ -21,6 +25,7 @@
   - `Edit note` — Opens a prompt for custom instructions
   - `Edit with selection` — Uses selected text as the instruction
   - `Auto-improve` — Automatically fixes typos, grammar, and clarity
+  - `Generate template` — Create Obsidian templates from a description
   - `Quick prompts` — Fuzzy-searchable preset prompts
 
 - **Multi-provider support**:

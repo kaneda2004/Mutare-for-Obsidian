@@ -29,3 +29,4 @@ data.json
 *.log
 coverage/
 dist/
+recording.mov

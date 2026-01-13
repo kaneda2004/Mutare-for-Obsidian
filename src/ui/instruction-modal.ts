@@ -7,9 +7,33 @@ export interface InstructionModalResult {
 export class InstructionModal extends Modal {
   private resolvePromise: ((result: InstructionModalResult) => void) | null = null;
   private instruction: string = '';
+  private customTitle: string = 'Mutare: Edit Note';
+  private customDescription: string = 'Describe what changes you want the AI to make to your note:';
+  private customPlaceholder: string = 'e.g., "Fix typos and grammar", "Convert to bullet points", "Add a summary section"...';
+  private customButtonText: string = 'Edit Note';
 
   constructor(app: App) {
     super(app);
+  }
+
+  setTitle(title: string): this {
+    this.customTitle = title;
+    return this;
+  }
+
+  setDescription(desc: string): this {
+    this.customDescription = desc;
+    return this;
+  }
+
+  setPlaceholder(placeholder: string): this {
+    this.customPlaceholder = placeholder;
+    return this;
+  }
+
+  setButtonText(text: string): this {
+    this.customButtonText = text;
+    return this;
   }
 
   async waitForResult(): Promise<InstructionModalResult> {
@@ -25,11 +49,11 @@ export class InstructionModal extends Modal {
     modalEl.addClass('mutare-instruction-modal');
 
     // Title
-    contentEl.createEl('h2', { text: 'Mutare: Edit Note' });
+    contentEl.createEl('h2', { text: this.customTitle });
 
     // Description
     contentEl.createEl('p', {
-      text: 'Describe what changes you want the AI to make to your note:',
+      text: this.customDescription,
       cls: 'mutare-instruction-desc',
     });
 
@@ -37,7 +61,7 @@ export class InstructionModal extends Modal {
     const textAreaContainer = contentEl.createDiv({ cls: 'mutare-textarea-container' });
     const textArea = new TextAreaComponent(textAreaContainer);
     textArea
-      .setPlaceholder('e.g., "Fix typos and grammar", "Convert to bullet points", "Add a summary section"...')
+      .setPlaceholder(this.customPlaceholder)
       .onChange((value) => {
         this.instruction = value;
       });
@@ -72,7 +96,7 @@ export class InstructionModal extends Modal {
       });
 
     new ButtonComponent(buttonContainer)
-      .setButtonText('Edit Note')
+      .setButtonText(this.customButtonText)
       .setCta()
       .onClick(() => {
         this.submit();

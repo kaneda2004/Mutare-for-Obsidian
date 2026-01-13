@@ -83,7 +83,25 @@ export default class MutarePlugin extends Plugin {
       },
     });
 
-    // Command 5: View history
+    // Command 5: Generate Template (with input)
+    this.addCommand({
+      id: 'generate-template',
+      name: 'Generate template',
+      editorCallback: async (editor: Editor, view: MarkdownView) => {
+        const modal = new InstructionModal(this.app);
+        modal.setTitle('Generate Template');
+        modal.setDescription('Describe the type of template you want to create:');
+        modal.setPlaceholder('e.g., "Meeting notes", "Project planning", "Book review", "Daily journal"...');
+        modal.setButtonText('Generate');
+        const result = await modal.waitForResult();
+        if (result.instruction) {
+          const prompt = `Create an Obsidian template for: ${result.instruction}. Use appropriate markdown formatting, YAML frontmatter if useful, placeholder text in {{double-braces}}, headings, sections, and any relevant structure. Replace the current content with the generated template.`;
+          await this.executeAIEdit(editor, view, prompt);
+        }
+      },
+    });
+
+    // Command 6: View history
     this.addCommand({
       id: 'view-history',
       name: 'View edit history',
@@ -284,7 +302,38 @@ export default class MutarePlugin extends Plugin {
       });
 
       menu.addItem((item) => {
-        item.setTitle('Quick prompts').setIcon('zap').onClick(() => {
+        item.setTitle('Auto Improve').setIcon('sparkles').onClick(async () => {
+          const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+          if (view) {
+            const autoImprove = this.settings.savedPrompts.find(p => p.id === 'auto-improve');
+            const prompt = autoImprove?.prompt || 'Analyze this note and make intelligent improvements: fix typos and grammar, improve clarity and flow, enhance formatting and structure, and add any missing elements that would make it more useful. Preserve the original meaning and voice.';
+            await this.executeAIEdit(view.editor, view, prompt);
+          }
+        });
+      });
+
+      menu.addItem((item) => {
+        item.setTitle('Generate Template').setIcon('layout-template').onClick(async () => {
+          const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+          if (view) {
+            const modal = new InstructionModal(this.app);
+            modal.setTitle('Generate Template');
+            modal.setDescription('Describe the type of template you want to create:');
+            modal.setPlaceholder('e.g., "Meeting notes", "Project planning", "Book review", "Daily journal"...');
+            modal.setButtonText('Generate');
+            const result = await modal.waitForResult();
+            if (result.instruction) {
+              const prompt = `Create an Obsidian template for: ${result.instruction}. Use appropriate markdown formatting, YAML frontmatter if useful, placeholder text in {{double-braces}}, headings, sections, and any relevant structure. Replace the current content with the generated template.`;
+              await this.executeAIEdit(view.editor, view, prompt);
+            }
+          }
+        });
+      });
+
+      menu.addSeparator();
+
+      menu.addItem((item) => {
+        item.setTitle('More prompts...').setIcon('zap').onClick(() => {
           const view = this.app.workspace.getActiveViewOfType(MarkdownView);
           if (view) {
             new QuickPromptModal(this.app, this.settings.savedPrompts, async (prompt) => {

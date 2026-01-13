@@ -4,7 +4,7 @@
   "version": "1.2.0",
   "minAppVersion": "1.4.0",
   "description": "Autonomous LLM-powered note editing - let AI analyze and edit your notes intelligently",
-  "author": "",
-  "authorUrl": "",
+  "author": "kaneda2004",
+  "authorUrl": "https://github.com/kaneda2004",
   "isDesktopOnly": true
 }

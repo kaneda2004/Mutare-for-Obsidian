@@ -1,6 +1,6 @@
 {
   "name": "mutare",
-  "version": "1.2.0",
+  "version": "1.3.2",
   "description": "Autonomous LLM-powered note editing for Obsidian",
   "main": "main.js",
   "type": "module",

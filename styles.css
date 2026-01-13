@@ -1,0 +1,149 @@
+/* Mutare Plugin Styles */
+
+/* Preview Modal */
+.mutare-preview-modal {
+  max-width: 800px;
+}
+
+.mutare-preview-modal h2 {
+  margin-bottom: 1rem;
+}
+
+.mutare-reasoning {
+  background: var(--background-secondary);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mutare-reasoning h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-accent);
+}
+
+.mutare-reasoning p {
+  margin: 0;
+  font-style: italic;
+}
+
+.mutare-summary {
+  margin-bottom: 1rem;
+}
+
+.mutare-summary h4 {
+  margin-bottom: 0.5rem;
+}
+
+.mutare-edit-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mutare-edit-list li {
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  background: var(--background-secondary);
+}
+
+.mutare-line-num {
+  font-family: var(--font-monospace);
+  color: var(--text-muted);
+}
+
+.mutare-action-replace {
+  background: var(--color-yellow);
+  color: var(--background-primary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.mutare-action-insert {
+  background: var(--color-green);
+  color: var(--background-primary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.mutare-action-delete {
+  background: var(--color-red);
+  color: var(--background-primary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.mutare-content-preview {
+  margin: 0.5rem 0 0 0;
+  padding: 0.5rem;
+  background: var(--background-primary);
+  border-radius: 4px;
+  font-size: 0.9em;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.mutare-diff {
+  margin-bottom: 1rem;
+}
+
+.mutare-diff h4 {
+  margin-bottom: 0.5rem;
+}
+
+.mutare-preview-container {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+}
+
+.mutare-preview-content {
+  margin: 0;
+  padding: 1rem;
+  font-size: 0.9em;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.mutare-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Instruction Modal */
+.mutare-instruction-modal {
+  max-width: 600px;
+}
+
+.mutare-instruction-modal h2 {
+  margin-bottom: 0.5rem;
+}
+
+.mutare-instruction-desc {
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.mutare-textarea-container {
+  margin-bottom: 0.5rem;
+}
+
+.mutare-textarea-container textarea {
+  resize: vertical;
+}
+
+.mutare-hint {
+  font-size: 0.85em;
+  color: var(--text-faint);
+  margin-bottom: 1rem;
+}

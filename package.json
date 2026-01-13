@@ -1,0 +1,27 @@
+{
+  "name": "mutare",
+  "version": "1.0.0",
+  "description": "Autonomous LLM-powered note editing for Obsidian",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production"
+  },
+  "keywords": ["obsidian", "plugin", "llm", "ai", "editor"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.25.0",
+    "obsidian": "latest",
+    "typescript": "^5.8.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.0",
+    "@google/genai": "^1.0.0",
+    "openai": "^4.80.0",
+    "zod": "^3.24.0",
+    "zod-to-json-schema": "^3.24.0"
+  }
+}

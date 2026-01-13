@@ -1,0 +1,10 @@
+{
+  "id": "mutare",
+  "name": "Mutare",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Autonomous LLM-powered note editing - let AI analyze and edit your notes intelligently",
+  "author": "",
+  "authorUrl": "",
+  "isDesktopOnly": true
+}

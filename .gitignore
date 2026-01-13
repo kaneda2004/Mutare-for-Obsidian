@@ -1,0 +1,31 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Build output
+main.js
+*.js.map
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Obsidian
+data.json
+
+# Claude Code
+.claude/
+
+# Optional: if you use these
+*.log
+coverage/
+dist/

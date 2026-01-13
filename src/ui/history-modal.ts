@@ -109,13 +109,17 @@ export class HistoryModal extends Modal {
 
       const diffContainer = contentEl.createDiv({ cls: 'mutare-diff-container' });
 
+      // Before pane
       const beforeEl = diffContainer.createDiv({ cls: 'mutare-diff-pane' });
       beforeEl.createEl('h4', { text: 'Before' });
-      beforeEl.createEl('pre', { text: entry.beforeContent, cls: 'mutare-diff-content' });
+      const beforeContent = beforeEl.createDiv({ cls: 'mutare-diff-content' });
+      this.renderDiffLines(beforeContent, entry.beforeContent, entry.afterContent, 'before');
 
+      // After pane
       const afterEl = diffContainer.createDiv({ cls: 'mutare-diff-pane' });
       afterEl.createEl('h4', { text: 'After' });
-      afterEl.createEl('pre', { text: entry.afterContent, cls: 'mutare-diff-content' });
+      const afterContent = afterEl.createDiv({ cls: 'mutare-diff-content' });
+      this.renderDiffLines(afterContent, entry.beforeContent, entry.afterContent, 'after');
 
       const buttonContainer = contentEl.createDiv({ cls: 'mutare-buttons' });
       new ButtonComponent(buttonContainer)
@@ -123,6 +127,44 @@ export class HistoryModal extends Modal {
         .onClick(() => diffModal.close());
     };
     diffModal.open();
+  }
+
+  private renderDiffLines(container: HTMLElement, before: string, after: string, side: 'before' | 'after') {
+    const beforeLines = before.split('\n');
+    const afterLines = after.split('\n');
+
+    // Simple line-by-line diff
+    const maxLines = Math.max(beforeLines.length, afterLines.length);
+    const lines = side === 'before' ? beforeLines : afterLines;
+    const otherLines = side === 'before' ? afterLines : beforeLines;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const otherLine = otherLines[i];
+      const lineEl = container.createDiv({ cls: 'mutare-diff-line' });
+
+      // Line number
+      lineEl.createSpan({ text: String(i + 1).padStart(3, ' '), cls: 'mutare-diff-linenum' });
+
+      // Determine if line was added, removed, or changed
+      if (side === 'before') {
+        if (i >= afterLines.length || line !== otherLine) {
+          lineEl.addClass('mutare-diff-removed');
+          lineEl.createSpan({ text: '- ', cls: 'mutare-diff-marker' });
+        } else {
+          lineEl.createSpan({ text: '  ', cls: 'mutare-diff-marker' });
+        }
+      } else {
+        if (i >= beforeLines.length || line !== otherLine) {
+          lineEl.addClass('mutare-diff-added');
+          lineEl.createSpan({ text: '+ ', cls: 'mutare-diff-marker' });
+        } else {
+          lineEl.createSpan({ text: '  ', cls: 'mutare-diff-marker' });
+        }
+      }
+
+      lineEl.createSpan({ text: line || ' ', cls: 'mutare-diff-text' });
+    }
   }
 
   private getRelativeTime(date: Date): string {

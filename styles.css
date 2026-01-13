@@ -288,7 +288,7 @@
    ======================================== */
 
 .mutare-diff-modal {
-  max-width: 900px;
+  max-width: 1400px;
 }
 
 .mutare-diff-container {
@@ -307,14 +307,49 @@
 }
 
 .mutare-diff-content {
-  max-height: 300px;
+  max-height: 400px;
   overflow: auto;
-  padding: 1rem;
   background: var(--background-secondary);
   border-radius: 8px;
+  font-family: var(--font-monospace);
   font-size: 0.85em;
-  white-space: pre-wrap;
-  word-break: break-word;
+}
+
+.mutare-diff-line {
+  display: flex;
+  padding: 1px 8px;
+  white-space: pre;
+}
+
+.mutare-diff-linenum {
+  color: var(--text-faint);
+  margin-right: 8px;
+  user-select: none;
+}
+
+.mutare-diff-marker {
+  margin-right: 4px;
+  font-weight: 600;
+}
+
+.mutare-diff-text {
+  flex: 1;
+}
+
+.mutare-diff-added {
+  background: rgba(40, 167, 69, 0.2);
+}
+
+.mutare-diff-added .mutare-diff-marker {
+  color: var(--color-green);
+}
+
+.mutare-diff-removed {
+  background: rgba(220, 53, 69, 0.2);
+}
+
+.mutare-diff-removed .mutare-diff-marker {
+  color: var(--color-red);
 }
 
 /* ========================================

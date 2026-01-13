@@ -40,13 +40,23 @@ export class HistoryModal extends Modal {
 
     const listEl = contentEl.createDiv({ cls: 'mutare-history-list' });
 
-    for (const entry of this.history.slice().reverse()) {
+    // History is already sorted newest-first (unshift in saveToHistory)
+    for (const entry of this.history) {
       const itemEl = listEl.createDiv({ cls: 'mutare-history-item' });
 
       const infoEl = itemEl.createDiv({ cls: 'mutare-history-info' });
 
       const date = new Date(entry.timestamp);
-      const timeStr = date.toLocaleString();
+      const dateStr = date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined,
+      });
+      const timeStr = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+      });
+      const relativeTime = this.getRelativeTime(date);
 
       infoEl.createEl('div', {
         text: entry.notePath.split('/').pop() || entry.notePath,
@@ -57,7 +67,7 @@ export class HistoryModal extends Modal {
         cls: 'mutare-history-instruction',
       });
       infoEl.createEl('div', {
-        text: `${timeStr} • ${entry.editsApplied} edits`,
+        text: `${relativeTime} (${dateStr}, ${timeStr}) • ${entry.editsApplied} edits`,
         cls: 'mutare-history-meta',
       });
 
@@ -113,6 +123,21 @@ export class HistoryModal extends Modal {
         .onClick(() => diffModal.close());
     };
     diffModal.open();
+  }
+
+  private getRelativeTime(date: Date): string {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return `${Math.floor(diffDays / 7)}w ago`;
   }
 
   onClose() {

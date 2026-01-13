@@ -24,9 +24,9 @@ export class HistoryModal extends Modal {
   }
 
   onOpen() {
-    const { contentEl } = this;
+    const { contentEl, modalEl } = this;
     contentEl.empty();
-    contentEl.addClass('mutare-history-modal');
+    modalEl.addClass('mutare-history-modal');
 
     contentEl.createEl('h2', { text: 'Edit History' });
 
@@ -100,9 +100,9 @@ export class HistoryModal extends Modal {
   private showDiff(entry: EditHistoryEntry) {
     const diffModal = new Modal(this.app);
     diffModal.onOpen = () => {
-      const { contentEl } = diffModal;
+      const { contentEl, modalEl } = diffModal;
       contentEl.empty();
-      contentEl.addClass('mutare-diff-modal');
+      modalEl.addClass('mutare-diff-modal');
 
       contentEl.createEl('h2', { text: 'Changes Made' });
       contentEl.createEl('p', { text: `Instruction: "${entry.instruction}"` });

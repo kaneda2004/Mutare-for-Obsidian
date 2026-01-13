@@ -55,12 +55,14 @@ export interface SavedPrompt {
 }
 
 export const DEFAULT_PROMPTS: SavedPrompt[] = [
+  { id: 'auto-improve', name: 'Auto Improve', prompt: 'Analyze this note and make intelligent improvements: fix typos and grammar, improve clarity and flow, enhance formatting and structure, and add any missing elements that would make it more useful. Preserve the original meaning and voice.' },
   { id: 'fix-grammar', name: 'Fix Grammar & Typos', prompt: 'Fix any typos, grammar issues, and spelling mistakes.' },
   { id: 'improve-clarity', name: 'Improve Clarity', prompt: 'Improve the clarity and readability of this note while preserving the meaning.' },
   { id: 'make-concise', name: 'Make Concise', prompt: 'Make this note more concise by removing redundancy and unnecessary words.' },
   { id: 'add-summary', name: 'Add Summary', prompt: 'Add a brief TL;DR summary at the top of this note.' },
   { id: 'convert-bullets', name: 'Convert to Bullets', prompt: 'Convert this content into a well-organized bulleted list.' },
   { id: 'format-table', name: 'Format as Table', prompt: 'Convert this content into a markdown table with appropriate columns.' },
+  { id: 'generate-template', name: 'Generate Template', prompt: 'Based on the description in this note, create a reusable Obsidian template with appropriate markdown formatting, YAML frontmatter if useful, placeholder text in {{double-braces}}, headings, sections, and any relevant structure. Replace the current content with the generated template.' },
 ];
 
 // ============================================

@@ -20,9 +20,9 @@ export class InstructionModal extends Modal {
   }
 
   onOpen() {
-    const { contentEl } = this;
+    const { contentEl, modalEl } = this;
     contentEl.empty();
-    contentEl.addClass('mutare-instruction-modal');
+    modalEl.addClass('mutare-instruction-modal');
 
     // Title
     contentEl.createEl('h2', { text: 'Mutare: Edit Note' });

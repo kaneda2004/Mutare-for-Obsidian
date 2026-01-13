@@ -48,9 +48,9 @@ export class EditPreviewModal extends Modal {
   }
 
   onOpen() {
-    const { contentEl } = this;
+    const { contentEl, modalEl } = this;
     contentEl.empty();
-    contentEl.addClass('mutare-preview-modal');
+    modalEl.addClass('mutare-preview-modal');
 
     // Register keyboard shortcut
     this.scope.register(['Mod'], 'Enter', (evt: KeyboardEvent) => {

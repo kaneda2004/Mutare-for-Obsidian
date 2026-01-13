@@ -1,12 +1,26 @@
 /* Mutare Plugin Styles */
 
-/* Preview Modal */
+/* ========================================
+   Preview Modal
+   ======================================== */
+
 .mutare-preview-modal {
-  max-width: 800px;
+  width: 90vw !important;
+  max-width: 800px !important;
+  height: 80vh !important;
+  max-height: 800px !important;
+}
+
+.mutare-preview-modal .modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 
 .mutare-preview-modal h2 {
   margin: 0;
+  flex-shrink: 0;
 }
 
 /* Header with top action bar */
@@ -17,6 +31,7 @@
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--background-modifier-border);
+  flex-shrink: 0;
 }
 
 .mutare-top-buttons {
@@ -39,6 +54,9 @@
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 1rem;
+  flex-shrink: 0;
+  max-height: 120px;
+  overflow-y: auto;
 }
 
 .mutare-reasoning h4 {
@@ -53,6 +71,9 @@
 
 .mutare-summary {
   margin-bottom: 1rem;
+  flex-shrink: 0;
+  max-height: 150px;
+  overflow-y: auto;
 }
 
 .mutare-summary h4 {
@@ -117,14 +138,21 @@
 
 .mutare-diff {
   margin-bottom: 1rem;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .mutare-diff h4 {
   margin-bottom: 0.5rem;
+  flex-shrink: 0;
 }
 
 .mutare-preview-container {
-  max-height: 300px;
+  flex: 1;
+  min-height: 50px;
   overflow-y: auto;
   border: 1px solid var(--background-modifier-border);
   border-radius: 8px;
@@ -143,34 +171,58 @@
   justify-content: flex-end;
   gap: 0.5rem;
   margin-top: 1rem;
+  flex-shrink: 0;
+  padding: 4px;
 }
 
-/* Instruction Modal */
+/* ========================================
+   Instruction Modal
+   ======================================== */
+
 .mutare-instruction-modal {
-  max-width: 600px;
+  width: 90vw !important;
+  max-width: 600px !important;
+  height: auto !important;
+  max-height: 80vh !important;
+}
+
+.mutare-instruction-modal .modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 
 .mutare-instruction-modal h2 {
   margin-bottom: 0.5rem;
+  flex-shrink: 0;
 }
 
 .mutare-instruction-desc {
   color: var(--text-muted);
   margin-bottom: 1rem;
+  flex-shrink: 0;
 }
 
 .mutare-textarea-container {
   margin-bottom: 0.5rem;
+  flex: 1;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
 }
 
 .mutare-textarea-container textarea {
   resize: vertical;
+  flex: 1;
+  min-height: 80px;
 }
 
 .mutare-hint {
   font-size: 0.85em;
   color: var(--text-faint);
   margin-bottom: 1rem;
+  flex-shrink: 0;
 }
 
 /* ========================================
@@ -227,7 +279,22 @@
    ======================================== */
 
 .mutare-history-modal {
-  max-width: 900px;
+  width: 90vw !important;
+  max-width: 900px !important;
+  height: 80vh !important;
+  max-height: 700px !important;
+}
+
+.mutare-history-modal .modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.mutare-history-modal h2 {
+  flex-shrink: 0;
+  margin-bottom: 1rem;
 }
 
 .mutare-history-empty {
@@ -238,7 +305,8 @@
 }
 
 .mutare-history-list {
-  max-height: 400px;
+  flex: 1;
+  min-height: 50px;
   overflow-y: auto;
 }
 
@@ -281,6 +349,7 @@
   display: flex;
   gap: 0.5rem;
   margin-left: 1rem;
+  flex-shrink: 0;
 }
 
 /* ========================================
@@ -288,26 +357,55 @@
    ======================================== */
 
 .mutare-diff-modal {
-  max-width: 1400px;
+  width: 95vw !important;
+  max-width: 1800px !important;
+  height: 85vh !important;
+  max-height: 900px !important;
+}
+
+.mutare-diff-modal .modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.mutare-diff-modal h2 {
+  flex-shrink: 0;
+  margin-bottom: 0.5rem;
+}
+
+.mutare-diff-modal > .modal-content > p {
+  flex-shrink: 0;
+  margin-bottom: 0.5rem;
 }
 
 .mutare-diff-container {
   display: flex;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .mutare-diff-pane {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .mutare-diff-pane h4 {
   margin-bottom: 0.5rem;
+  flex-shrink: 0;
 }
 
 .mutare-diff-content {
-  max-height: 400px;
+  flex: 1;
+  min-height: 50px;
   overflow: auto;
   background: var(--background-secondary);
   border-radius: 8px;

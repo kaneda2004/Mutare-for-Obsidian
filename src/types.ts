@@ -103,8 +103,8 @@ export const DEFAULT_SETTINGS: MutareSettings = {
     gemini: '',
   },
   models: {
-    anthropic: 'claude-sonnet-4-5',
-    openai: 'gpt-5.1',
+    anthropic: 'claude-haiku-4-5',
+    openai: 'gpt-5.1-mini',
     gemini: 'gemini-3-flash',
   },
   customSystemPrompt: '',

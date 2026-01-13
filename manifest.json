@@ -1,7 +1,7 @@
 {
   "id": "mutare",
   "name": "Mutare",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "minAppVersion": "1.4.0",
   "description": "Autonomous LLM-powered note editing - let AI analyze and edit your notes intelligently",
   "author": "kaneda2004",
